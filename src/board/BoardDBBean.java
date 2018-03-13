@@ -231,7 +231,6 @@ public void insertArticle(BoardDataBean article) {
 			conn = getConnection();
 			String sql = "update board set writer=?,email=?,subject=?,content=? where num=? and passwd=?";
 			pstmt = conn.prepareStatement(sql);
-			System.out.println("°á°ú°ª"+pstmt);
 			pstmt.setString(1, article.getWriter());
 			pstmt.setString(2, article.getEmail());
 			pstmt.setString(3, article.getSubject());
@@ -239,9 +238,6 @@ public void insertArticle(BoardDataBean article) {
 			pstmt.setInt(5, article.getNum());
 			pstmt.setString(6, article.getPasswd());
 			chk = pstmt.executeUpdate();
-			
-			System.out.println(chk);
-			
 			}catch(SQLException ex){
 				ex.printStackTrace();
 			}finally {

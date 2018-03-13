@@ -20,7 +20,6 @@ public class BoardDBMybatis extends MybatisConnector{
 	public static BoardDBMybatis getInstance() {
 		return instance;
 	}
-	
 	SqlSession sqlSession;
 	
 	
@@ -63,13 +62,53 @@ public class BoardDBMybatis extends MybatisConnector{
 			article.setRef(number);
 			article.setRe_level(0);
 			article.setRe_step(0);
-			
 		}
 		article.setNum(number);
 
 		sqlSession.insert(namespace+".insertBoard",article);
 		sqlSession.commit();
 		sqlSession.close();
+	}
+	
+	
+	
+	public BoardDataBean getArticle(int num, String boardid, String chk) {
+		
+		sqlSession = sqlSession();
+		Map map = new HashMap();
+		map.put("num", num);
+		map.put("boardid", boardid);
+		
+		if(chk.equals("content")) {
+			sqlSession.update(namespace+".addReadCount",map);
+		}
+		BoardDataBean article = sqlSession.selectOne(namespace+".getArticle", map) ;		//오브젝트인가? 컬렉션인가?
+		sqlSession.commit();
+		sqlSession.close();
+		return article;
+	}
+	
+	
+	public int updateArticle(BoardDataBean article) {
+		sqlSession = sqlSession();
+		int chk = sqlSession.update(namespace+".updateArticle",article);
+		sqlSession.commit();
+		sqlSession.close();
+		return chk;
+	}
+	
+	public int deleteArticle(int num, String passwd, String boardid) throws Exception {
+		sqlSession = sqlSession();
+		Map map = new HashMap();
+		map.put("num", num);
+		map.put("passwd", passwd);
+		map.put("boardid", boardid);
+		int chk = sqlSession.delete(namespace+".deleteArticle", map);
+		sqlSession.commit();
+		sqlSession.close();
+		return chk;
 		
 	}
+	
+	
 }
